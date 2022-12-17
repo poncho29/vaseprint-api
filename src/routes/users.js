@@ -10,7 +10,7 @@ const { getUser,
         deleteUser } = require('../controllers/users');
 
 const { validJwt, validRole, validFields } = require('../middlewares');
-const { existUserById, existEmail, existRole } = require('../helpers/dbValidators');     
+const { existUserById, existEmail, existRole, existRoles } = require('../helpers/dbValidators');     
 
 // Public
 router.get('/', getUsers);
@@ -23,10 +23,9 @@ router.get('/:id', [
 
 // Public
 router.post('/', [
-  body('name', 'El nombre  es requerido').not().isEmpty(),
-  body('password', 'La contraseña debe tener minimo 6 caracteres').isLength({ min: 6 }),
   body('email', 'El correo no es valido').isEmail(),
   body('email').custom(existEmail),
+  body('password', 'La contraseña debe tener minimo 6 caracteres').isLength({ min: 6 }),
   body('roleId').custom(existRole),
   validFields
 ], createUser);

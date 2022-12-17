@@ -7,10 +7,14 @@ const getUser = async (req, res) => {
 
   try {
     const user = await User.findByPk(id, {
-      include: ['role'],
+      include: ['person'],
     });
+
+    const { password, state, ...rest } = user.dataValues;
     
-    res.status(200).json(user)
+    res.status(200).json({
+      user: rest
+    })
   } catch (error) {
     console.log(error);
 
@@ -23,22 +27,28 @@ const getUser = async (req, res) => {
 // Public
 const getUsers = async (req, res) => {
   const { limit = 5, offset = 0 } = req.query;
-  const query = { state: true }
+  const query = { state: true };
 
   try {
     const [ count, users ] = await Promise.all([
-      User.count({where: query}),
+      User.count({ where: query }),
       User.findAll({
         where: query,
-        // include: ['role'],
+        // include: ['person'],
         limit: Number(limit),
         offset: Number(offset)
       })  
     ]);
+
+    let allUsers = [];
+    for (const user of users) {
+      const { password, state, ...rest } = user.dataValues;
+      allUsers.push(rest);
+    }
     
     res.status(200).json({
       count,
-      users
+      users: allUsers
     });
   } catch (error) {
     console.log(error);
@@ -94,6 +104,9 @@ const updateUser = async (req, res) => {
     }
 
     await user.update(rest);
+
+    delete user.dataValues.password;
+    delete user.dataValues.state;
 
     res.status(200).json({
       msg: 'User update successfull',

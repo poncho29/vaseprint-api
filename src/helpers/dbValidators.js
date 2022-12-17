@@ -1,4 +1,4 @@
-const { User, Role, Product, Category } = require('../db/models');
+const { User, Person, Role, Product, Category } = require('../db/models');
 
 // Valida si el email ya existe
 const existEmail = async(email = '') => {
@@ -12,10 +12,31 @@ const existEmail = async(email = '') => {
 // Valida si el rol es valido
 // const existRole = async(role = '') => {
 const existRole = async(id = 1) => {
-  const existRole = await Role.findOne({ where: { id } });
+  const existRole = await Role.findByPk(id);
   
   if( !existRole ) {
     throw new Error(`There is no role with id ${id}`);
+  }
+}
+
+const existRoles = async(roles = []) => {
+  for (let i = 0; i < roles.length; i++) {
+    let id = roles[i];
+    const existRole = await Role.findByPk(id);
+    console.log(existRole)
+    
+    if(!existRole) {
+      throw new Error(`There is no role with id ${id}`);
+    }
+  }
+}
+
+// Valida si existe una persona
+const existPersonById = async (id = '') => {
+  const person = await Person.findByPk(id);
+
+  if(!person) {
+    throw new Error(`There is no person with id ${id}`);
   }
 }
 
@@ -47,9 +68,11 @@ const existCategoryById = async (id = 1) => {
 }
 
 module.exports = {
+  existPersonById,
   existUserById,
   existEmail,
   existRole,
+  existRoles,
   existProductById,
   existCategoryById
 }

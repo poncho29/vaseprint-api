@@ -29,10 +29,10 @@ const RoleSchema = {
 class Role extends Model {
   static associate(models) {
     // La relacion queda bidireccional
-    // this.hasOne(models.User, {
-    //   as: 'user',
-    //   foreignKey: 'roleId'
-    // });
+    this.hasOne(models.User, {
+      as: 'user',
+      foreignKey: 'roleId'
+    });
   };
 
   static config(sequelize) {
