@@ -1,19 +1,19 @@
 const { User, UserSchema } = require('./user');
 const { Role, RoleSchema } = require('./role');
 const { Person, PersonSchema } = require('./person');
-const { UserRole, UserRoleSchema } = require('./user-role');
 const { Order, OrderSchema } = require('./order');
 const { Product, ProductSchema } = require('./product');
 const { Category, CategorySchema } = require('./category');
+const { OrderProduct, OrderProductSchema } = require('./order-product');
 
 function setupModels(sequelize) {
   User.init(UserSchema, User.config(sequelize));
   Role.init(RoleSchema, Role.config(sequelize));
   Person.init(PersonSchema, Person.config(sequelize));
-  UserRole.init(UserRoleSchema, UserRole.config(sequelize));
   Order.init(OrderSchema, Order.config(sequelize));
   Product.init(ProductSchema, Product.config(sequelize));
   Category.init(CategorySchema, Category.config(sequelize));
+  OrderProduct.init(OrderProductSchema, OrderProduct.config(sequelize));
 
   // Ejecuta las asociaciones
   User.associate(sequelize.models);
@@ -30,5 +30,6 @@ module.exports = {
   Order,
   Product,
   Category,
+  OrderProduct,
   setupModels
 };

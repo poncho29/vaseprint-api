@@ -52,6 +52,10 @@ const PersonSchema = {
 class Person extends Model {
   static associate(models) {
     this.belongsTo(models.User, { as: 'user' });
+    this.hasMany(models.Order, {
+      as: 'orders',
+      foreignKey: 'personId'
+    })
   }
 
   static config(sequelize) {

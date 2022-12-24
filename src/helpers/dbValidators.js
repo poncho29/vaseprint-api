@@ -1,4 +1,4 @@
-const { User, Person, Role, Product, Category } = require('../db/models');
+const { User, Person, Role, Product, Category, Order } = require('../db/models');
 
 // Valida si el email ya existe
 const existEmail = async(email = '') => {
@@ -67,6 +67,15 @@ const existCategoryById = async (id = 1) => {
   }
 }
 
+// Valida si existe un producto
+const existOrderById = async (id = '') => {
+  const order = await Order.findByPk(id);
+
+  if (!order) {
+    throw new Error(`There is no order with id ${id}`)
+  }
+}
+
 module.exports = {
   existPersonById,
   existUserById,
@@ -74,5 +83,6 @@ module.exports = {
   existRole,
   existRoles,
   existProductById,
-  existCategoryById
+  existCategoryById,
+  existOrderById
 }
