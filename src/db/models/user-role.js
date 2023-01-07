@@ -1,26 +1,26 @@
 const { Sequelize, Model, DataTypes } = require('sequelize');
 const { ROLE_TABLE } = require('./role');
+const { USER_TABLE } = require('./user');
 
-const USER_TABLE = 'users';
+const USER_ROLE_TABLE = 'user_role';
 
-const UserSchema = {
+const UserRoleSchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
     type: DataTypes.INTEGER
   },
-  email: {
+  userId: {
     allowNull: false,
-    type: DataTypes.STRING
-  },
-  password: {
-    allowNull: false,
-    type: DataTypes.STRING
-  },
-  state: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: 1
+    field: 'user_id',
+    type: DataTypes.INTEGER,    
+    references: {
+      key: 'id',
+      model: USER_TABLE ,
+    },
+    onUpdate: 'CASCADE',
+    // onDelete: 'SET NULL',
   },
   roleId: {
     allowNull: false,
@@ -45,35 +45,23 @@ const UserSchema = {
   }
 };
 
-class User extends Model {
-  static associate(models) {
-    this.hasOne(models.Person, {
-      as: 'person',
-      foreignKey: 'userId'
-    });
-    this.belongsTo(models.Role, {
-      as: 'role'
-    });
-    // this.belongsToMany(models.Role, {
-    //   as: 'roles',
-    //   through: models.UserRole,
-    //   foreignKey: 'userId',
-    //   otherKey: 'roleId'
-    // });
-  };
+class UserRole extends Model {
+  static associate() {
+    // associate
+  }
 
   static config(sequelize) {
     return {
       sequelize,
-      tableName: USER_TABLE,
-      modelName: 'User',
+      tableName: USER_ROLE_TABLE,
+      modelName: 'UserRole',
       timestamps: false
     }
-  };
+  }
 };
 
 module.exports = {
-  User,
-  UserSchema,
-  USER_TABLE
-}
+  UserRole,
+  UserRoleSchema,
+  USER_ROLE_TABLE
+};

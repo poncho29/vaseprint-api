@@ -7,12 +7,12 @@ const validRole = (req, res = response, next) => {
     });
   }
 
-  const { roleId, name } = req.user;
+  const { roleId, email } = req.user;
 
   // if(role !== 'ADMIN_ROLE') {
-  if(roleId !== 2) {
+  if(roleId !== 1) {
     return res.status(401).json({
-      msg: `${name} no es administrador - no puede realizar esta acción`
+      msg: `${email} no es administrador - no puede realizar esta acción`
     });
   }
 

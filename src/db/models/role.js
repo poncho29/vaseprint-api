@@ -12,7 +12,7 @@ const RoleSchema = {
   role: {
     allowNull: false,
     type: DataTypes.STRING,
-    defaultValue: "USER_ROLE"
+    defaultValue: "customer"
   },
   createdAt: {
     field: 'created_at',
@@ -24,7 +24,7 @@ const RoleSchema = {
     type: DataTypes.DATE,
     defaultValue: Sequelize.NOW
   }
-}
+};
 
 class Role extends Model {
   static associate(models) {
@@ -32,8 +32,8 @@ class Role extends Model {
     this.hasOne(models.User, {
       as: 'user',
       foreignKey: 'roleId'
-    })
-  }
+    });
+  };
 
   static config(sequelize) {
     return {
