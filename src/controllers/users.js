@@ -1,4 +1,4 @@
-const { User } = require('../db/models');
+const { User } = require('../models');
 const bcryptjs = require('bcryptjs');
 
 // Public
@@ -6,9 +6,7 @@ const getUser = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const user = await User.findByPk(id, {
-      include: ['person'],
-    });
+    const user = await User.findByPk(id);
 
     const { password, state, ...rest } = user.dataValues;
     
@@ -34,7 +32,6 @@ const getUsers = async (req, res) => {
       User.count({ where: query }),
       User.findAll({
         where: query,
-        // include: ['person'],
         limit: Number(limit),
         offset: Number(offset)
       })  
@@ -61,7 +58,7 @@ const getUsers = async (req, res) => {
 
 // Public
 const createUser = async (req, res) => {
-  const { password, ...rest } = req.body
+  const { password, state, ...rest } = req.body
 
   try {
     // Encriptando contraseña

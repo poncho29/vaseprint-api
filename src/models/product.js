@@ -53,7 +53,7 @@ const ProductSchema = {
       model: CATEGORY_TABLE
     },
     onUpdate: 'CASCADE',
-    onDelete: 'SET NULL'
+    onDelete: 'CASCADE'
   },
   // user: {
   //   type: Schema.Types.ObjectId,

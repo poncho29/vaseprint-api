@@ -1,6 +1,6 @@
 const { Sequelize } = require('sequelize');
 
-const { setupModels } = require('./models');
+const { setupModels } = require('../models');
 
 const USER_DB = process.env.USER_DB;
 const PASSWORD_DB = process.env.PASSWORD_DB;

@@ -1,5 +1,5 @@
 const { Sequelize, Model, DataTypes } = require('sequelize');
-const { PERSON_TABLE } = require('./person');
+const { USER_TABLE } = require('./user');
 
 const ORDER_TABLE = 'orders';
 
@@ -10,16 +10,16 @@ const OrderSchema = {
     primaryKey: true,
     type: DataTypes.INTEGER
   },
-  personId: {
-    field: 'person_id',
+  userId: {
+    field: 'user_id',
     allowNull: false,
     type: DataTypes.INTEGER,
     references: {
       key: 'id',
-      model: PERSON_TABLE
+      model: USER_TABLE
     },
     onUpdate: 'CASCADE',
-    // onDelete: 'SET NULL',
+    // onDelete: 'CASCADE',
   },
   total: {
     type: DataTypes.VIRTUAL,
@@ -47,7 +47,7 @@ const OrderSchema = {
 
 class Order extends Model {
   static associate(models) {
-    this.belongsTo(models.Person, { as: 'person' });
+    this.belongsTo(models.User, { as: 'user' });
     this.belongsToMany(models.Product, {
       as: 'items',
       through: models.OrderProduct,

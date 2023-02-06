@@ -23,6 +23,9 @@ router.get('/:id', [
 
 // Public
 router.post('/', [
+  body('name', 'El nombre es requerido').not().isEmpty(),
+  body('phone', 'El teléfono es requerido').not().isEmpty(),
+  body('phone', 'El teléfono debe tener 10 caracteres').isLength(10),
   body('email', 'El correo no es valido').isEmail(),
   body('email').custom(existEmail),
   body('password', 'La contraseña debe tener minimo 6 caracteres').isLength({ min: 6 }),

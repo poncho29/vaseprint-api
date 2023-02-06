@@ -1,4 +1,4 @@
-const { User, Person, Role, Product, Category, Order } = require('../db/models');
+const { User, Person, Role, Product, Category, Order } = require('../models');
 
 // Valida si el email ya existe
 const existEmail = async(email = '') => {

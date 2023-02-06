@@ -3,7 +3,7 @@ const bcryptjs = require('bcryptjs');
 
 const { generateJWT } = require('../helpers/generateJwt');
 
-const { User } = require('../db/models');
+const { User } = require('../models');
 
 const login = async (req, res = response) => {
   const { email, password } = req.body;

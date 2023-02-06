@@ -1,14 +1,22 @@
 const { Sequelize, Model, DataTypes } = require('sequelize');
-const { USER_TABLE } = require('./user');
+const { ROLE_TABLE } = require('./role');
 
-const PERSON_TABLE = 'persons';
+const USER_TABLE = 'users';
 
-const PersonSchema = {
+const UserSchema = {
   id: {
     allowNull: false,
     autoIncrement: true,
     primaryKey: true,
     type: DataTypes.INTEGER
+  },
+  email: {
+    allowNull: false,
+    type: DataTypes.STRING
+  },
+  password: {
+    allowNull: false,
+    type: DataTypes.STRING
   },
   name: {
     allowNull: false,
@@ -26,6 +34,21 @@ const PersonSchema = {
   img: {
     type: DataTypes.STRING
   },
+  state: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: 1
+  },
+  roleId: {
+    allowNull: false,
+    field: 'role_id',
+    type: DataTypes.INTEGER,    
+    references: {
+      key: 'id',
+      model: ROLE_TABLE,
+    },
+    onUpdate: 'CASCADE',
+    // onDelete: 'SET NULL',
+  },
   createdAt: {
     field: 'created_at',
     type: DataTypes.DATE,
@@ -35,41 +58,32 @@ const PersonSchema = {
     field: 'updated_at',
     type: DataTypes.DATE,
     defaultValue: Sequelize.NOW
-  },
-  userId: {
-    allowNull: false,
-    field: 'user_id',
-    type: DataTypes.INTEGER,    
-    references: {
-      key: 'id',
-      model: USER_TABLE,
-    },
-    onUpdate: 'CASCADE',
-    // onDelete: 'SET NULL',
-  },  
+  }
 };
 
-class Person extends Model {
+class User extends Model {
   static associate(models) {
-    this.belongsTo(models.User, { as: 'user' });
     this.hasMany(models.Order, {
       as: 'orders',
-      foreignKey: 'personId'
+      foreignKey: 'userId'
     })
-  }
+    this.belongsTo(models.Role, {
+      as: 'role'
+    });
+  };
 
   static config(sequelize) {
     return {
       sequelize,
-      tableName: PERSON_TABLE,
-      modelName: 'Person',
+      tableName: USER_TABLE,
+      modelName: 'User',
       timestamps: false
     }
-  }
+  };
 };
 
 module.exports = {
-  Person,
-  PersonSchema,
-  PERSON_TABLE
-};
+  User,
+  UserSchema,
+  USER_TABLE
+}

@@ -12,7 +12,6 @@ class Server {
       auth: '/api/auth',
       users: '/api/users',
       orders: '/api/orders',
-      persons: '/api/persons',
       products: '/api/products',
       categories: '/api/categories',
     }
@@ -44,7 +43,6 @@ class Server {
     this.app.use(this.paths.auth, require('./routes/auth')),
     this.app.use(this.paths.users, require('./routes/users')),
     this.app.use(this.paths.orders, require('./routes/orders')),
-    this.app.use(this.paths.persons, require('./routes/persons')),
     this.app.use(this.paths.products, require('./routes/products')),
     this.app.use(this.paths.categories, require('./routes/categories'))
   };
