@@ -29,10 +29,10 @@ const getPersons = async (req, res) => {
     const [ count, persons ] = await Promise.all([
       Person.count(),
       Person.findAll({
-        // include: ['user'],
+        include: ['user'],
         limit: Number(limit),
         offset: Number(offset)
-      })  
+      })
     ]);
     
     res.status(200).json({
