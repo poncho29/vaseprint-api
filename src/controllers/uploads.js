@@ -8,7 +8,7 @@ const { fileUploadHelper } = require('../helpers');
 const uploadFile = async (req, res = response) => {
   try {
     // Guarda imagenes
-    const nameFile = await fileUploadHelper(req.files, undefined, 'images');
+    const nameFile = await fileUploadHelper(req.files.file, undefined, 'images');
     res.json({ nameFile });
   } catch (msg) {
     res.status(400).json({ msg });
@@ -81,13 +81,13 @@ const getImage = async (req, res = response) => {
       break;
 
     case 'products':
-        model = await Product.findByPk(id);
-        if (!model) {
-          return res.status(400).json({
-            msg: `No existe un producto con el id ${id}`
-          });
-        }
-        break;
+      model = await Product.findByPk(id);
+      if (!model) {
+        return res.status(400).json({
+          msg: `No existe un producto con el id ${id}`
+        });
+      }
+      break;
 
     default:
       return res.status(500).json({ msg: `La coleccion ${collection} no existe.` })
@@ -98,7 +98,7 @@ const getImage = async (req, res = response) => {
     // Borrar la imagen del servidor
     const pathImg = path.join(__dirname, '../uploads', collection, model.img);
     if (fs.existsSync(pathImg)) {
-      res.sendFile(pathImg);
+      return res.sendFile(pathImg);
     }
   }
 

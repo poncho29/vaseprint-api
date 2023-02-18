@@ -1,10 +1,10 @@
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
-const fileUploadHelper = (files, validExtensions = ['png', 'jpg', 'jpeg'], folder = '') => {
+const fileUploadHelper = (file, validExtensions = ['png', 'jpg', 'jpeg'], folder = '') => {
 
   return new Promise((resolve, reject) => {
-    const { file } = files;
+    // const { file } = files;
     const shortName = file.name.split('.');
     const extension = shortName[shortName.length - 1];
 
@@ -15,6 +15,7 @@ const fileUploadHelper = (files, validExtensions = ['png', 'jpg', 'jpeg'], folde
 
     // Redefinimos la ruta hacia la carperta upoloads
     const nameTemp = uuidv4() + '.' + extension;
+
     // Folder es el nomber de una carpeta nueva si no viene no afecta
     uploadPath = path.join(__dirname, '../uploads/', folder, nameTemp);
 
