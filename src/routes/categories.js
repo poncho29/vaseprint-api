@@ -25,7 +25,7 @@ router.get('/:id', [
 router.post('/', [
   validJwt,
   validRole,
-  body('name', 'Category name is required').not().isEmpty(),
+  body('name', 'El nombre de la categoria es requerida').not().isEmpty(),
   validFields
 ], createCategory);
 

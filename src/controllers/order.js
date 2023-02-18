@@ -7,8 +7,8 @@ const getOrder = async (req, res) => {
     const order = await Order.findByPk(id, {
       include: [
         {
-          association: 'person',
-          include: ['user']
+          association: 'user',
+          // include: ['user']
         },
         'items'
       ]
@@ -54,7 +54,7 @@ const createOrder = async (req, res) => {
     const newOrder = await Order.create(req.body);
 
     res.status(201).json({
-      msg: 'newOrder created successfully',
+      msg: 'New order created successfully',
       newOrder
     });
   } catch (error) {

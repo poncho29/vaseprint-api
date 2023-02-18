@@ -5,17 +5,16 @@ const existEmail = async(email = '') => {
   const existEmail = await User.findOne({ where: { email } });
 
   if(existEmail) {
-    throw new Error(`The email ${email} is already registered`);
+    throw new Error(`El correo ${email} ya esta registrado`);
   }
 }
 
 // Valida si el rol es valido
-// const existRole = async(role = '') => {
 const existRole = async(id = 1) => {
   const existRole = await Role.findByPk(id);
   
   if( !existRole ) {
-    throw new Error(`There is no role with id ${id}`);
+    throw new Error(`No existe un rol con el id ${id}`);
   }
 }
 
@@ -23,20 +22,10 @@ const existRoles = async(roles = []) => {
   for (let i = 0; i < roles.length; i++) {
     let id = roles[i];
     const existRole = await Role.findByPk(id);
-    console.log(existRole)
     
     if(!existRole) {
-      throw new Error(`There is no role with id ${id}`);
+      throw new Error(`No existe un rol con el id ${id}`);
     }
-  }
-}
-
-// Valida si existe una persona
-const existPersonById = async (id = '') => {
-  const person = await Person.findByPk(id);
-
-  if(!person) {
-    throw new Error(`There is no person with id ${id}`);
   }
 }
 
@@ -45,7 +34,7 @@ const existUserById = async (id = '') => {
   const user = await User.findByPk(id);
 
   if(!user) {
-    throw new Error(`There is no user with id ${id}`);
+    throw new Error(`No existe un usuario con el id ${id}`);
   }
 }
 
@@ -54,7 +43,7 @@ const existProductById = async (id = '') => {
   const producto = await Product.findByPk(id);
 
   if (!producto) {
-    throw new Error(`There is no product with id ${id}`)
+    throw new Error(`No existe un producto con el id ${id}`)
   }
 }
 
@@ -63,7 +52,7 @@ const existCategoryById = async (id = 1) => {
   const category = await Category.findByPk(id);
 
   if (!category) {
-    throw new Error(`There is no category with id ${id}`)
+    throw new Error(`No existe una categoria con el id ${id}`)
   }
 }
 
@@ -72,17 +61,28 @@ const existOrderById = async (id = '') => {
   const order = await Order.findByPk(id);
 
   if (!order) {
-    throw new Error(`There is no order with id ${id}`)
+    throw new Error(`No existe una orden con el id ${id}`)
   }
 }
 
+// Valida si existe la coleccion(tabla)
+const collectionsAllowed = (collection = '', collections = []) => {
+  const existCollection = collections.includes(collection);
+
+  if(!existCollection) {
+    throw new Error(`La colección ${collection} no es permitida`);
+  }
+
+  return true;
+}
+
 module.exports = {
-  existPersonById,
   existUserById,
   existEmail,
   existRole,
   existRoles,
   existProductById,
   existCategoryById,
-  existOrderById
+  existOrderById,
+  collectionsAllowed
 }

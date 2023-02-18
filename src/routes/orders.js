@@ -8,7 +8,7 @@ const { getOrder,
 
 
 const { validFields, validJwt } = require('../middlewares');
-const { existOrderById, existPersonById, existProductById } = require('../helpers');
+const { existOrderById, existProductById, existUserById } = require('../helpers');
 
 const router = Router();
 
@@ -24,7 +24,7 @@ router.get('/:id', [
 // Public
 router.post('/', [
   validJwt,
-  body('personId').custom(existPersonById),
+  body('userId').custom(existUserById),
   validFields
 ], createOrder);
 
@@ -33,7 +33,7 @@ router.post('/add-item', [
   validJwt,
   body('orderId').custom(existOrderById),
   body('productId').custom(existProductById),
-  body('amount', 'The amount in required').not().isEmpty(),
+  body('amount', 'La cantidad es requerida').not().isEmpty(),
   validFields
 ], addItem);
 
