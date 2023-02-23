@@ -1,4 +1,4 @@
-const { Product, Category } = require('../models')
+const { Product, Category } = require('../models');
 
 const getProduct = async (req, res) => {
   const { id } = req.params;
@@ -125,7 +125,8 @@ const deleteProduct = async (req, res) => {
       })
     }
 
-    await product.update({ state: false });
+    // await product.update({ state: false });
+    await product.destroy();
 
     res.status(200).json({
       msg: 'Product delete successfull',

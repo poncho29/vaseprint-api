@@ -1,9 +1,6 @@
-const fs = require('fs');
-const path = require('path');
 const bcryptjs = require('bcryptjs');
 
 const { User } = require('../models');
-const { fileUploadHelper } = require('../helpers');
 
 // Public
 const getUser = async (req, res) => {
@@ -44,6 +41,7 @@ const getUsers = async (req, res) => {
     let allUsers = [];
     for (const user of users) {
       const { password, state, ...rest } = user.dataValues;
+
       allUsers.push(rest);
     }
     
@@ -63,16 +61,11 @@ const getUsers = async (req, res) => {
 // Public
 const createUser = async (req, res) => {
   const { password, state, ...rest } = req.body;
-  const imgFile = req.files.img;
 
   try {
     // Encriptando contraseña
     const salt = bcryptjs.genSaltSync();
     rest.password = bcryptjs.hashSync(password, salt);
-
-    // Guardando imagen
-    const imgName = await fileUploadHelper(imgFile, undefined, 'users');
-    rest.img = imgName;
 
     const newUser = await User.create(rest);
 
@@ -93,7 +86,6 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   const { id } = req.params;
   const { password, ...rest } = req.body;
-  const imgFile = req.files.img;
 
   try {
     const user = await User.findByPk(id);
@@ -109,18 +101,6 @@ const updateUser = async (req, res) => {
       const salt = bcryptjs.genSaltSync();
       rest.password = bcryptjs.hashSync(password, salt);
     }
-
-    // Limpiar imagenes previa
-    if (user.img) {
-      // Borrar la imagen del servidor
-      const pathImg = path.join(__dirname, '../uploads', 'users', user.img);
-      if (fs.existsSync(pathImg)) {
-        fs.unlinkSync(pathImg);
-      }
-    }
-
-    // Se guarda la nueva imagen
-    rest.img = await fileUploadHelper(imgFile, undefined, 'users');
 
     await user.update(rest);
 
