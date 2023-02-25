@@ -1,18 +1,23 @@
 const { Router } = require("express");
-const { param } = require('express-validator');
+const { param, body } = require('express-validator');
 
 const { validFields, validFile } = require('../middlewares');
 const { collectionsAllowed, existUserById } = require("../helpers");
-const { uploadFile, updateImageCloudinary, getImage } = require("../controllers/uploads");
+const {
+  getImage,
+  uploadImageCloudinary,
+  updateImageCloudinary,
+  deleteImageCloudinary
+} = require("../controllers/uploads");
 
 const router = Router();
 
-router.post('/', validFile, uploadFile);
+router.post('/', validFile, uploadImageCloudinary);
 
 router.put('/:collection/:id', [
   validFile,
   param('id').custom(existUserById),
-  param('collection').custom(c => collectionsAllowed(c, ['users', 'products'])),
+  // param('collection').custom(c => collectionsAllowed(c, ['users', 'products'])),
   validFields
 ], updateImageCloudinary);
 // ], updateImage);
@@ -22,5 +27,7 @@ router.get('/:collection/:id', [
   param('collection').custom(c => collectionsAllowed(c, ['users', 'products'])),
   validFields
 ], getImage);
+
+router.delete('/:id', deleteImageCloudinary);
 
 module.exports = router;

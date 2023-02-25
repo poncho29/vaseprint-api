@@ -1,3 +1,5 @@
+const cloudinary = require('cloudinary').v2
+cloudinary.config(process.env.CLOUDINARY_URL);
 const { Product, Category } = require('../models');
 
 const getProduct = async (req, res) => {
@@ -45,10 +47,18 @@ const getProducts = async (req, res) => {
 }
 
 const createProduct = async (req, res) => {
+  const { file } = req.files;
   const { name, state, ...rest } = req.body;
   const nameUpper = name.toUpperCase();
 
+  console.log(file)
   try {
+    if (file.length > 3) {
+      return res.status(400).json({
+        msg: 'No se pueden enviar mas de 3 imagenes'
+      });
+    }
+
     const product = await Product.findOne({ where: { name: nameUpper } });
 
     if (product) {
@@ -57,8 +67,24 @@ const createProduct = async (req, res) => {
       })
     }
 
+    // Upload images
+    const imgPromises = file.map(async (img) => {
+      const promise = await cloudinary.uploader.upload(img.tempFilePath);
+      
+      return promise;
+    });
+
+    const images = await Promise.all(imgPromises);
+    const urlImages = images.map((img, id) => {
+      return {
+        id,
+        img: img.secure_url
+      }
+    });
+
     const data = {
       ...rest,
+      img: JSON.stringify(urlImages),
       name: nameUpper
     }
 
@@ -79,6 +105,7 @@ const createProduct = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   const { id } = req.params;
+  const { file } = req.files;
   const { state, ...data } = req.body;
 
   try {
@@ -97,6 +124,24 @@ const updateProduct = async (req, res) => {
     };
 
     const product = await Product.findByPk(id);
+
+    // Update Images
+    if (file.length > 0) {
+      const imgReq = JSON.parse(data.img);
+      const imgProduct = JSON.parse(product.img);
+      
+      const imgsRemove = imgProduct.map((img, id) => {
+        if (img[id] === imgReq[id]) return;
+
+        return img[id];
+      });
+
+      if (imgsRemove.length > 0) {
+        imgsRemove.forEach(async (img) => {
+          await cloudinary.uploader.upload(img);
+        });
+      }
+    }
 
     const upadteProduct = await product.update(data);
 

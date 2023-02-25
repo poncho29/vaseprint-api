@@ -1,4 +1,7 @@
 const bcryptjs = require('bcryptjs');
+// Autenticacion con claudinary
+// const cloudinary = require('cloudinary').v2
+// cloudinary.config(process.env.CLOUDINARY_URL);
 
 const { User } = require('../models');
 
@@ -63,11 +66,13 @@ const createUser = async (req, res) => {
   const { password, state, ...rest } = req.body;
 
   try {
-    // Encriptando contraseña
+    // Encrypt password
     const salt = bcryptjs.genSaltSync();
     rest.password = bcryptjs.hashSync(password, salt);
 
     const newUser = await User.create(rest);
+
+    delete newUser.password;
 
     res.status(201).json({
       msg: 'User created successfull',
